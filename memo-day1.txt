@@ -1,0 +1,23 @@
+# Dev
+docker run -p 80:80 --rm -v $(pwd):/usr/share/nginx/html nginx:1.29.1
+
+# Build
+cd 01-Docker-Command/kineteco
+docker build -t kineteco:1.0 .
+docker images
+docker run -p 80:80 --rm kineteco:1.0
+docker tag kineteco:1.0 irobust/kinetego:1.0
+docker login
+docker push irobust/kinetego:1.0
+
+# Deploy
+docker pull irobust/kinetego:1.0
+## Anonymous Mounts
+docker run --rm -v /usr/share/nginx/html/kinetoco_consumer_files irobust/kinetego:1.0
+docker ps
+docker inspect -f '{{ .Mounts }}' [container ID]
+
+## Named Mounts
+docker run --rm -v kineteco:/usr/share/nginx/html/kinetoco_consumer_files irobust/kinetego:1.0
+docker ps
+docker inspect -f '{{ .Mounts }}' [container ID]

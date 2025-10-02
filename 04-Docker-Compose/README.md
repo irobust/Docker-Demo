@@ -7,6 +7,50 @@
 * docker-compose exec -it [Service Name] [Command]
 * docker-compose logs [Service Name]
 
+## Profile
+```yml
+  scheduler:
+    build: scheduler/.
+    profiles:
+      - scheduling_services
+  storefront: 
+    build: storefront/.
+    profiles:
+      - storefront_services
+```
+
+```
+docker-compose --profile=storefront up
+```
+
+## Multiple Docker Compose file
+```
+# docker-compose.override.yml
+services:
+  scheduler:
+    environment:
+      - runtime_env=default
+  storefront:
+    environment:
+      - runtime_env=default
+```
+
+```
+docker-compose -f docker-compose.yml -f docker-compose.debug.yml up
+```
+
+## Environment Variables
+1. Specified database version in docker-compose.yml
+    ```yml
+    services:
+        database: 
+            image: "mysql:${TAG:-latest}"
+    ```
+2. Create .env file for configure tag
+    ```
+    TAG=latest
+    ```
+
 ## Getting start with ASP.Net Core
 1. Create new project
 ```
