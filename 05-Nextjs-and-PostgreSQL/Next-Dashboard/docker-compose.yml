@@ -1,0 +1,33 @@
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - '3000:3000'
+    command: sh -c "npm install && npm run dev"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      db: 
+        condition: service_healthy
+
+  db:
+    image: postgres:17
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=next-db
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready","-h localhost -p 5432 -U postgres -d postgres"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+volumes:
+  pgdata:
